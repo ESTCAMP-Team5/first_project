@@ -45,40 +45,56 @@ axes[2].set_title("월별 총 소비금액")
 plt.tight_layout()
 plt.show()
 
+# 🧪 가설 2: 지역별 소비가 집중된 업종
+region_buz = df.groupby(['cty_rgn_no', 'card_tpbuz_nm_1'])['amt'].sum().reset_index()
+top_buz_by_region = region_buz.sort_values(['cty_rgn_no', 'amt'], ascending=[True, False]).groupby('cty_rgn_no').head(1)
+
+print("\n[지역별 소비가 가장 높은 업종]")
+print(top_buz_by_region)
 
 
-#월별 소비 추세 시각화
+# 🧪 가설 3: 소비량이 증가하는 지역/업종
+monthly_trend = df.groupby(['month', 'cty_rgn_no', 'card_tpbuz_nm_1'])['amt'].sum().reset_index()
+monthly_pivot = monthly_trend.pivot_table(index=['cty_rgn_no', 'card_tpbuz_nm_1'], columns='month', values='amt').fillna(0)
+monthly_pivot['증가율'] = (monthly_pivot[3] - monthly_pivot[1]) / monthly_pivot[1].replace(0, 1)
 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+print("\n[소비 증가율 상위 지역/업종]")
+print(monthly_pivot.sort_values('증가율', ascending=False).head(10))
 
-df['month'] = pd.to_datetime(df['date']).dt.to_period('M')
-monthly = df.groupby(['region', 'industry', 'month'])['amount'].sum().reset_index()
-
-sns.lineplot(data=monthly, x='month', y='amount', hue='region')
-plt.title("월별 지역별 소비 추세")
+# 🧪 가설 4: 소비 급증 시기 → 외부 요인 탐지 (시각화용)
+daily_amt = df.groupby('ta_ymd')['amt'].sum()
+daily_amt.plot(title="일별 소비 추이 (이상치 확인용)", figsize=(12, 4))
+plt.ylabel("총 소비 금액")
+plt.xlabel("날짜")
+plt.grid()
 plt.show()
 
-#업종별 소비 집중 지역 파악
+# 🧪 가설 5: 고소비 vs 저소비 지역 비교
+region_total = df.groupby('cty_rgn_no')['amt'].sum().sort_values(ascending=False)
+top_region = region_total.head(3).index
+bottom_region = region_total.tail(3).index
 
-pivot = df.pivot_table(index='industry', columns='region', values='amount', aggfunc='sum')
-sns.heatmap(pivot, cmap='Blues', annot=True, fmt='.0f')
-plt.title("업종별 지역 소비 집중도")
-plt.show()
+print("\n[고소비 지역 상위 3]")
+print(region_total.head(3))
+print("\n[저소비 지역 하위 3]")
+print(region_total.tail(3))
 
-#소비 증가율이 높은 업종 찾기
+# 고소비 vs 저소비 지역의 업종 분포 비교
+for region in [*top_region, *bottom_region]:
+    temp = df[df['cty_rgn_no'] == region]
+    temp_group = temp.groupby('card_tpbuz_nm_1')['amt'].sum().sort_values(ascending=False).head(5)
+    temp_group.plot(kind='bar', title=f"업종별 소비 상위 (지역: {region})", figsize=(6, 3))
+    plt.ylabel("총 소비금액")
+    plt.tight_layout()
+    plt.show()
 
-df['month'] = pd.to_datetime(df['date']).dt.to_period('M')
-monthly = df.groupby(['industry', 'month'])['amount'].sum().reset_index()
-monthly['growth'] = monthly.groupby('industry')['amount'].pct_change()
+# 📊 분석 그래프 이미지
+1. 📈 시간대별 소비 금액
+![image](https://github.com/user-attachments/assets/500049f2-ab0f-4526-9ae5-e4c08902602a)
 
-top_growth = monthly.sort_values('growth', ascending=False).head(10)
-print(top_growth)
+2. 📅 요일별 소비 금액
 
-#소비당 건수 / 방문자 수
 
-df['amount_per_visit'] = df['amount'] / df['count']
-sns.boxplot(data=df, x='region', y='amount_per_visit', hue='industry')
-plt.title("방문 1회당 소비금액 분포")
-plt.show()
+
+
+
