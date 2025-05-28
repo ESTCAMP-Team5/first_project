@@ -10,7 +10,7 @@
 
 고소비 지역의 소비 특성과 저소비 지역의 차이는 무엇인가? = 타겟 구분 기준 마련하기
 
-#EDA 분석용
+# 파이썬 코드
 
 import pandas as pd
 import matplotlib.pyplot as plt
