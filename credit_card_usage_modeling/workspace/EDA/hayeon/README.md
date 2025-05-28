@@ -53,6 +53,10 @@ plt.show()
 2. 📅 요일별 소비 금액
 ![image](https://github.com/user-attachments/assets/de57724b-1471-46db-a540-6cf51e36ca99)
 
+3. 📆 월별 소비 금액
+   ![image](https://github.com/user-attachments/assets/b9e959e4-20aa-4b42-b588-5bf92eecee9c)
+
+
 
 # 🧪 가설 2: 지역별 소비가 집중된 업종
 target_regions = ['41110', '41460', '41590', '41270']  # 수원, 용인, 화성, 안산
