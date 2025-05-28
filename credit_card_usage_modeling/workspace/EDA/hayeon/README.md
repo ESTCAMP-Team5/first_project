@@ -52,11 +52,36 @@ plt.show()
 
 
 # 🧪 가설 2: 지역별 소비가 집중된 업종
-region_buz = df.groupby(['cty_rgn_no', 'card_tpbuz_nm_1'])['amt'].sum().reset_index()
-top_buz_by_region = region_buz.sort_values(['cty_rgn_no', 'amt'], ascending=[True, False]).groupby('cty_rgn_no').head(1)
+target_regions = ['41110', '41460', '41590', '41270']  # 수원, 용인, 화성, 안산
+filtered_df = df[df['cty_rgn_no'].isin(target_regions)]
 
-print("\n[지역별 소비가 가장 높은 업종]")
-print(top_buz_by_region)
+# 시각화 스타일
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+sns.set_theme(style="whitegrid", palette="Set2")
+
+# ✅ 1. 지역별 총 소비금액 비교
+plt.figure(figsize=(7, 5))
+sns.barplot(x='cty_rgn_no', y='amt', data=filtered_df, estimator=np.sum, ci=None)
+plt.title("4개 지역별 총 소비금액 비교", fontsize=14)
+plt.xlabel("시군 코드", fontsize=12)
+plt.ylabel("총 소비금액", fontsize=12)
+plt.tight_layout()
+plt.savefig("4개지역_총소비금액.png")
+plt.show()
+
+# ✅ 2. 지역별 업종별 소비금액 비교
+region_buz = filtered_df.groupby(['cty_rgn_no', 'card_tpbuz_nm_1'])['amt'].sum().reset_index()
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x='cty_rgn_no', y='amt', hue='card_tpbuz_nm_1', data=region_buz, estimator=np.sum, ci=None)
+plt.title("4개 지역별 업종별 소비금액", fontsize=14)
+plt.xlabel("시군 코드", fontsize=12)
+plt.ylabel("총 소비금액", fontsize=12)
+plt.legend(title="업종", bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.savefig("4개지역_업종소비비교.png")
+plt.show()
 
 
 # 🧪 가설 3: 소비량이 증가하는 지역/업종
