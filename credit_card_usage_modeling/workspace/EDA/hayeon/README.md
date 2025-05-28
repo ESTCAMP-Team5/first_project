@@ -2,7 +2,7 @@
 
 어떤 시기(시간대, 요일, 월)에 소비가 증가하는가? = 마케팅 타이밍 포착
 
-지역별로 소비가 집중되는 업종은 무엇인가? = 예산을 어디에 쓸지 결정
+지역별(수원 용인 화성 안산)로 소비가 집중되는 업종은 무엇인가? = 예산을 어디에 쓸지 결정
 
 소비량이 지속적으로 증가하는 지역/업종은 어디인가? = 성장 가능 업종 파악
 
@@ -44,6 +44,12 @@ axes[2].set_title("월별 총 소비금액")
 
 plt.tight_layout()
 plt.show()
+
+# 📊 분석 그래프 이미지
+1. 📈 시간대별 소비 금액
+   
+![image](https://github.com/user-attachments/assets/500049f2-ab0f-4526-9ae5-e4c08902602a)
+
 
 # 🧪 가설 2: 지역별 소비가 집중된 업종
 region_buz = df.groupby(['cty_rgn_no', 'card_tpbuz_nm_1'])['amt'].sum().reset_index()
@@ -88,11 +94,7 @@ for region in [*top_region, *bottom_region]:
     plt.tight_layout()
     plt.show()
 
-# 📊 분석 그래프 이미지
-1. 📈 시간대별 소비 금액
-![image](https://github.com/user-attachments/assets/500049f2-ab0f-4526-9ae5-e4c08902602a)
 
-2. 📅 요일별 소비 금액
 
 
 
