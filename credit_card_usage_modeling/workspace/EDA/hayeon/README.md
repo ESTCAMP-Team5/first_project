@@ -10,7 +10,8 @@
 
 
 
-🧪 가설 검증 방법 요약
+# 🧪 가설 검증 방법 요약
+
 데이터 전처리: 결측치 제거 및 기온-매출 데이터 정제
 회귀 모델: sklearn.linear_model.LinearRegression
 통계 검증: scipy.stats.linregress로 p-value 및 결정계수 산출
