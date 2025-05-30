@@ -1,7 +1,7 @@
 가설: 평균 기온(AvgTemp)은 커피 매출(amt)에 영향을 미친다
 
 🖥️ Streamlit 데모 화면
-<img src="demo_screenshot.png" width="600"/>
+[<img src="demo_screenshot.png" width="600"/>](http://localhost:8501/)
 
 🧪 가설 검증 방법 요약
 데이터 전처리: 결측치 제거 및 기온-매출 데이터 정제
