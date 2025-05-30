@@ -8,3 +8,6 @@
 회귀 모델: sklearn.linear_model.LinearRegression
 통계 검증: scipy.stats.linregress로 p-value 및 결정계수 산출
 결과 저장: 예측값과 지표를 포함한 결과를 MySQL의 sales_predictions 테이블에 저장
+
+p-value < 0.05 → 기온은 매출에 통계적으로 유의미한 영향을 미칩니다.
+p-value ≥ 0.05 → 기온은 매출에 영향 없음 (귀무가설 채택)
