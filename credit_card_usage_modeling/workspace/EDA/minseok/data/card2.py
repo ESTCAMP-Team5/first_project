@@ -24,151 +24,34 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
-#get_ipython().run_line_magic('matplotlib', 'inline')
 
-
-# In[355]:
-
-
-# df1=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 3월.csv')
-# df2=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 4월.csv')
-# df3=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 5월.csv')
-# df4=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 6월.csv')
-# df5=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 7월.csv')
-# df6=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 8월.csv')
-# df7=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 9월.csv')
-# df8=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 10월.csv')
-# df9=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 11월.csv')
-# df10=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/24년 12월.csv',encoding="cp949")
-# df11=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/25년 1월.csv')
-# df12=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/25년 2월.csv')
-# df13=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/25년 3월.csv')
-
-
-# In[356]:
-
-
-# df_c = pd.concat([df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13],ignore_index=True)
-
-
-# In[357]:
-
-
-# df_c1 = pd.read_csv('C:/Users/user-pc/Downloads/suwon_temp_2024to2025/suwon_temp_2024to2025/권선구.csv')
-
-
-# In[358]:
-
-
-# df_c
-
-
-# In[359]:
-
-
-# df = df_c[['ta_ymd','cty_rgn_no','card_tpbuz_nm_2','sex','age','hour','amt','cnt','day']]
-
-
-# In[360]:
-
-
-# df
-
-
-# In[361]:
-
-
-# df = df[df['card_tpbuz_nm_2']=='커피/음료']
-
-
-# In[362]:
-
-
-# df
-
-
-# In[363]:
-
-
-# df = df.drop(columns=['card_tpbuz_nm_2'])
-
-
-# In[364]:
-
-
-# df
-
-
-# In[365]:
-
-
-# df = df.reset_index(drop=True)
-
-
-# In[366]:
-
-
-# df
-
-
-# In[367]:
-
-
-# df_c1.rename(columns={'Date':'ta_ymd'},inplace=True)
-
-
-# In[368]:
-
-
-# df_map = df_c1.set_index('ta_ymd')['AvgTemp'].to_dict()
-
-
-# In[369]:
-
-
-# matched_temp = df['ta_ymd'].map(df_map)
-
-
-# In[370]:
-
-
-# df['AvgTemp'] = matched_temp
-
-
-# In[371]:
-
-
-# df
-
-
-# In[372]:
-
-
-# df.to_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/df_coffee_권선구.csv')
-
-
+#In[]:
+spaces = "&nbsp;"*20
+st.markdown(f"""
+<div style="
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+">
+    <h2 style="color: white; margin: 0;">
+        💰 수원시 카페 업종 매출 예측
+    </h2>
+    <p style="color: #aaa; margin: 0;">
+        {spaces}각종 외부 요인들이 카페 매출에 미치는 영향 분석
+    </p>
+</div>
+""", unsafe_allow_html=True)
 # In[373]:
 
 
 df=pd.read_csv('C:/Users/user-pc/Desktop/수원시 24.3~25.3/df_coffee_권선구.csv')
 
-
-# In[374]:
-
-
-df
-
-
 # In[375]:
 
 
 df = df.drop(columns=['Unnamed: 0'])
-
-
-# In[376]:
-
-
-df
 
 
 # # 결측치 처리
@@ -183,19 +66,63 @@ df=df.dropna()
 
 
 df.isna().sum()
+# In[]:
+df['ta_ymd'] = df['ta_ymd'].astype(str)
+df['ta_ymd'] = df['ta_ymd'].str[:4]+'-'+df['ta_ymd'].str[4:6]+'-'+df['ta_ymd'].str[6:]
+df['cty_rgn_no'] = df['cty_rgn_no'].astype(str)
 
+df.rename(columns={
+    'ta_ymd' : '날짜',
+    'cty_rgn_no' : '행정구 코드',
+    'sex' : '성별',
+    'age' : '나이(단위 : 1=10대)',
+    'hour' : '시간대(단위 : 1=2시간 24분)',
+    'amt' : '매출금액(단위 : 원)',
+    'cnt' : '구매횟수',
+    'day' : '요일(단위 : 1 = 월요일)',
+    'AvgTemp' : '평균 기온'
+}, inplace=True)
+#In[]:
+with st.container():
+    st.markdown("""
+        <div style="
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+        ">
+        <h4 style="color: white; margin-top: 0;">
+            ☕ 카페 업종 정보 출력
+        </h4>
+        </div>
+        """, unsafe_allow_html=True)
+    st.dataframe(df, use_container_width=True)
 
-# In[379]:
+st.write(
+"**41111 | 장안구**  \n"
+"**41113 | 권선구**  \n"
+"**41115 | 팔달구**  \n"
+"**41117 | 영통구**  \n")
 
+#In[]:
+df['날짜'] = df['날짜'].str.replace('-','').astype(int)
+df['행정구 코드'] = df['행정구 코드'].astype(int)
 
-df
-
-
-# # 수치형,범주형 변수 분류
-
+df.rename(columns={
+    '날짜' : 'ta_ymd',
+    '행정구 코드' : 'cty_rgn_no',
+    '성별' : 'sex',
+    '나이(단위 : 1=10대)' : 'age',
+    '시간대(단위 : 1=2시간 24분)' : 'hour',
+    '매출금액(단위 : 원)' : 'amt',
+    '구매횟수' : 'cnt',
+    '요일(단위 : 1 = 월요일)' : 'day',
+    '평균 기온' : 'AvgTemp'
+},inplace=True)
 # In[380]:
 
-
+# # 수치형,범주형 변수 분류
 num_cols = df.select_dtypes(include=['float64','int64']).columns
 cat_cols = df.select_dtypes(include=['object']).columns
 
@@ -372,14 +299,15 @@ X_amt_test_copy['predicted_amt'] = np.expm1(y_pred_amt)
 
 mean_amt_by_AvgTemp = X_amt_test_copy.groupby('AvgTemp')['predicted_amt'].mean()
 
-plt.figure(figsize=(12,8))
+fig, ax = plt.subplots(figsize=(12,6))
 sns.barplot(x=mean_amt_by_AvgTemp.index.astype(int), y=mean_amt_by_AvgTemp.values)
-plt.title("평균 기온별 평균 예측 매출")
-plt.xlim(-1,40)
-plt.xlabel("평균 기온(단위 : ℃)")
-plt.ylabel("평균 예측 매출")
-plt.show()
-print("기온이 {:.2f}℃일 때, 가장 높은 매출 {:.0f}원".format(mean_amt_by_AvgTemp.sort_values(ascending=False).index[1],mean_amt_by_AvgTemp.sort_values(ascending=False).iloc[1]))
+ax.set_title("평균 기온별 평균 예측 매출")
+ax.set_xlim(-1,40)
+ax.set_xlabel("평균 기온(단위 : ℃)")
+ax.set_ylabel("평균 예측 매출")
+st.title("🌡️평균 기온에 따른 평균 매출 예측")
+st.pyplot(fig)
+st.text("기온이 {:.2f}℃일 때, 가장 높은 매출 {:,.0f}원".format(mean_amt_by_AvgTemp.sort_values(ascending=False).index[1],mean_amt_by_AvgTemp.sort_values(ascending=False).iloc[1]))
 
 
 # # 2. 성별이 커피 매출에 끼치는 영향(회귀)
@@ -509,13 +437,18 @@ X_amt_test_copy['predicted_amt'] = np.expm1(y_pred_amt)
 mean_amt_by_hour = X_amt_test_copy.groupby('hour')['predicted_amt'].mean()
 
 # 시각화
-plt.figure(figsize=(8,4))
+fig, ax = plt.subplots()
 sns.barplot(x=mean_amt_by_hour.index, y=mean_amt_by_hour.values)
-plt.title("시간별 평균 예측 매출")
-plt.xlabel("시간대 (단위 예: 1=2시간24분씩)")
-plt.ylabel("평균 예측 매출")
-plt.show()
-print("오후 12:00 ~ 14:24에 가장 매출이 높았다.")
+ax.set_title("시간별 평균 예측 매출")
+ax.set_xlabel("시간대 (단위 예: 1=2시간24분씩)")
+ax.set_ylabel("평균 예측 매출")
+st.title("🕦시간대에 따른 평균 매출 예측")
+for x, y in zip(mean_amt_by_hour.index.astype(int), mean_amt_by_hour.values):
+    rounded_y = round(int(y),-2)
+    plt.text(x-1, y+1500, f'{rounded_y:,}\\', ha='center', fontsize=9)
+
+st.pyplot(fig)
+st.text("오후 12:00 ~ 14:24에 매출이 {:,}원으로 가장 높았다.".format(round(int(mean_amt_by_hour.values.max()),-2)))
 
 
 # # 3. 커피 매장을 운영하면서 특정 외부 요인에 의해 성별을 예측(분류)
@@ -570,29 +503,6 @@ print(confusion_matrix(y_sex_test, y_pred_sex))
 print("정확도는 약 62.1%이며 이는 전체 예측 중 62.1%만 정답을 맞췄다는 의미, 모델이 어느정도는 성별을 예측")
 print("정밀도, 재현율, f1-score 모두 0.60 수준이며 여성을 더 잘 예측함을 알 수 있다.")
 print("혼동행렬을 통해 남성 예측 정확도 약 59.5% / 여성 예측 정확도 64.6%로 알 수 있다.")
-
-X_train, X_test, y_sex_train, y_sex_test = train_test_split(X, y_sex_M, test_size=0.2, random_state=42)
-model = LGBMClassifier()
-model.fit(X_train, y_sex_train)
-y_pred_sex = model.predict(X_test)
-
-# 정확도
-accuracy = accuracy_score(y_sex_test, y_pred_sex)
-print("정확도 (Accuracy):", accuracy)
-
-# 상세 리포트 (정밀도, 재현율 등)
-print("\n분류 리포트 (Classification Report):")
-print(classification_report(y_sex_test, y_pred_sex))
-
-# 혼동 행렬
-print("혼동 행렬 (Confusion Matrix):")
-print(confusion_matrix(y_sex_test, y_pred_sex))
-
-#결과
-print("정확도는 약 62.1%이며 이는 전체 예측 중 62.1%만 정답을 맞췄다는 의미, 모델이 어느정도는 성별을 예측")
-print("정밀도, 재현율, f1-score 모두 0.60 수준이며 여성을 더 잘 예측함을 알 수 있다.")
-print("혼동행렬을 통해 남성 예측 정확도 약 59.5% / 여성 예측 정확도 64.6%로 알 수 있다.")
-
 
 
 # In[404]:
@@ -658,22 +568,21 @@ X_amt_test_copy['predicted_amt'] = np.expm1(y_pred_amt)
 mean_amt_by_day = X_amt_test_copy.groupby('day')['predicted_amt'].mean().astype(int)
 
 # 시각화
-plt.figure(figsize=(8,4))
+fig,ax = plt.subplots()
 sns.barplot(x=mean_amt_by_day.index, y=mean_amt_by_day.values)
-plt.title("요일별 평균 예측 매출")
-plt.xlabel("요일 (단위 예: 1=월요일)")
-plt.ylabel("평균 예측 매출")
-
+ax.set_title("요일별 평균 예측 매출")
+ax.set_xlabel("요일 (단위 예: 1=월요일)")
+ax.set_ylabel("평균 예측 매출")
+st.title("📅요일별 평균 예측 매출")
 for x, y in zip(mean_amt_by_day.index.astype(int), mean_amt_by_day.values):
-    plt.text(x-1, y+1500, f'{y:,.0f}', ha='center', fontsize=9)
-plt.show()
-print("토요일에 매출이 {}원으로 가장 높다".format(mean_amt_by_day.max()))
+    rounded_y = round(int(y),-2)
+    plt.text(x-1, y+1500, f'{rounded_y:,}\\', ha='center', fontsize=9)
+st.pyplot(fig)
+st.text("토요일에 매출이 {:,}원으로 가장 높다".format(round(int(mean_amt_by_day.max()),-2)))
 
-
-# # 5. 연령별 매출금액의 소비 수준 패턴 파악하기(군집)
 
 # In[411]:
-
+# # 5. 연령별 매출금액의 소비 수준 패턴 파악하기(군집)
 
 #연령대와 매출금액 간에 패턴 시각화하기
 X = df[['age', 'amt']]
@@ -688,30 +597,8 @@ scatter = ax.scatter(X['age'], X['amt'], c=df['cluster'], cmap='viridis')
 ax.set_xlabel('연령대')
 ax.set_ylabel('매출금액')
 ax.set_title('고객 클러스터링 시각화')
+st.title("👫🏻고객 군집 시각화")
 st.pyplot(fig)
-print(" 청록색 : 지속적으로 높은 지출을 하는 고객층이며 전 연령대에 걸쳐 있음을 볼 수 있다." \
+st.text(" 청록색 : 지속적으로 높은 지출을 하는 고객층이며 전 연령대에 걸쳐 있음을 볼 수 있다." \
 "\n 보라색 : 낮은 지출을 하는 고객층이며 이 고객들은 대부분 60대 이상(고령층)이 이에 해당한다." \
 "\n 노란색 : 매출금액이 평균적으로 보통 혹은 낮은 수준의 지출을 하는 젊은 연령대의 고객층이다.")
-
-
-# In[412]:
-
-st.write("데이터 미리보기", df.head())
-
-
-# In[414]:
-
-
-# 전처리 및 모델링
-if st.button("모델 학습 및 예측"):
-
-    X = df[['sex_F','sex_M','age','ta_ymd','hour','day']]
-    y = df['amt']
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
-    model = LGBMRegressor().fit(X_train, y_train)
-    pred = model.predict(X_test)
-
-    rmse = np.sqrt(mean_squared_error(y_test, pred))
-    st.metric("RMSE", rmse)
-
